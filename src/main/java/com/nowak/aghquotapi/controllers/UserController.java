@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -22,15 +23,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserData userData){
-//        Optional<User> existUser=
-//                Optional.ofNullable(userService.findByUsername(userData.getName()));
-//        if(existUser.isPresent()){
-//            return new ResponseEntity<>("User already exists", HttpStatus.FORBIDDEN);
-//        }
-//        else{
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> registerUser(@RequestBody UserData userData) {
+       Optional<User> existUser =
+                Optional.ofNullable(userService.findByUsername(userData.getName()));
+        if (existUser.isPresent()==true) {
+            return new ResponseEntity<>("User already exists", HttpStatus.FORBIDDEN);
+        } else {
             userService.registerUser(userData);
-//        }
+       }
         return new ResponseEntity<>("Registered", HttpStatus.CREATED);
     }
 }
