@@ -37,6 +37,12 @@ public class UserData {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public UserData(String name, String password, String email) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
 }
 
 

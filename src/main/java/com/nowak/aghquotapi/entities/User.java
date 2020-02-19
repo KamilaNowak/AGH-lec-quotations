@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 
 @Data
@@ -29,8 +30,22 @@ public class User {
     @Column(name="token")
     private String token;
 
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="users_authorities", joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name="id_authority"))
+    private Collection<Authority> usersAuthorities;
+
     public int getId() {
         return id;
+    }
+
+    public Collection<Authority> getUsersAuthorities() {
+        return usersAuthorities;
+    }
+
+    public void setUsersAuthorities(Collection<Authority> usersAuthorities) {
+        this.usersAuthorities = usersAuthorities;
     }
 
     public void setId(int id) {
