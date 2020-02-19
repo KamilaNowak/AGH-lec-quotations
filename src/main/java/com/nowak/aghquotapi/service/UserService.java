@@ -1,6 +1,6 @@
 package com.nowak.aghquotapi.service;
 
-import com.nowak.aghquotapi.JWTGenerator;
+import com.nowak.aghquotapi.jwt_gens.JWTGenerator;
 import com.nowak.aghquotapi.entities.User;
 import com.nowak.aghquotapi.repo.AuthorityRepo;
 import com.nowak.aghquotapi.repo.UserRepository;

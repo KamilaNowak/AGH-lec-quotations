@@ -1,4 +1,4 @@
-package com.nowak.aghquotapi;
+package com.nowak.aghquotapi.jwt_gens;
 
 import com.nowak.aghquotapi.requestBodies.UserData;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Component
 public class JWTGenerator {
 
-    @Value("${auth.accessKey}")
+    @Value("${auth.secretKey}")
     private String secretKey;
 
     public String generateJWTtoken(UserData userData){
@@ -34,7 +34,7 @@ public class JWTGenerator {
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+ (600000 *31))) //token for a month
-                .signWith(SignatureAlgorithm.HS256,secretKey.getBytes())
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 
         return  JWTtoken;
