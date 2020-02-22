@@ -1,13 +1,6 @@
 package com.nowak.aghquotapi.requestBodies;
 
-import lombok.*;
-import org.springframework.stereotype.Service;
-
-import javax.persistence.Column;
-
-@Data
-public class UserData {
-
+public class UserDto {
     private  String name;
 
     private String password;
@@ -38,11 +31,9 @@ public class UserData {
         this.email = email;
     }
 
-    public UserData(String name, String password, String email) {
+    public UserDto(String name, String password, String email) {
         this.name = name;
         this.password = password;
         this.email = email;
     }
 }
-
-
