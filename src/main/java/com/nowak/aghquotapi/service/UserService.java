@@ -1,29 +1,33 @@
 package com.nowak.aghquotapi.service;
 
-import com.nowak.aghquotapi.jwt_gens.JWTGenerator;
 import com.nowak.aghquotapi.entities.User;
 import com.nowak.aghquotapi.repo.AuthorityRepo;
 import com.nowak.aghquotapi.repo.UserRepository;
-import com.nowak.aghquotapi.requestBodies.UserData;
+import com.nowak.aghquotapi.requestBodies.UserDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Optional;
 
 @Service
-public class UserService {
+@Transactional
+public class UserService implements UserDetailsService {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AuthorityRepo authorityRepo;
-    private final JWTGenerator jwtGenerator;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthorityRepo authorityRepo, JWTGenerator jwtGenerator) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthorityRepo authorityRepo) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepo = authorityRepo;
-        this.jwtGenerator = jwtGenerator;
+
     }
 
     public User findByUsername(String userName){
@@ -53,13 +57,27 @@ public class UserService {
         }
         return  user;
     }
-    public void registerUser(UserData userData){
+    public void registerUser(UserDto userDto){
         User user = new User();
-        user.setName(userData.getName());
-        user.setPassword(passwordEncoder.encode(userData.getPassword()));
-        user.setName(userData.getEmail());
+        user.setName(userDto.getName());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setEmail(userDto.getEmail());
         user.setUsersAuthorities(Arrays.asList(authorityRepo.findByAuthority("ROLE_USER")));
-        user.setToken(jwtGenerator.generateJWTtoken(userData));
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        User userToLoad = userRepository.findByName(userName);
+        if(userToLoad!=null){
+            System.out.println(userToLoad.getName());
+            return new org.springframework.security.core.userdetails
+                    .User(userToLoad.getName(), userToLoad.getPassword(),
+                    true,true,true,
+                    true,userToLoad.getAuthorities());
+        }
+        else {
+            return (UserDetails) new UsernameNotFoundException(HttpStatus.NOT_FOUND.toString());
+        }
     }
 }

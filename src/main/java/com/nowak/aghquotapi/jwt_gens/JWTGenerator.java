@@ -1,43 +1,45 @@
 package com.nowak.aghquotapi.jwt_gens;
 
-import com.nowak.aghquotapi.requestBodies.UserData;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
-public class JWTGenerator {
+public class JWTgenerator {
 
-    @Value("${auth.secretKey}")
+    Logger logger =Logger.getLogger(JWTgenerator.class.getName());
+
+    @Value("${jwt.auth.secretKey}")
     private String secretKey;
 
-    public String generateJWTtoken(UserData userData){
+    @Value("${jwt.expiration}")
+    private String expirationTime;
 
-        List<GrantedAuthority> grantedAuthoritydAList = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
+    // get User profile
+    public String generateJWTtoken(Authentication authentication){
+        org.springframework.security.core.userdetails.User user =
+                (User) authentication.getPrincipal();
 
-        String JWTtoken= Jwts
-                .builder()
-                .setId(UUID.randomUUID().toString())
-                .setSubject(userData.getName())
-                .claim("authorities",
-                        grantedAuthoritydAList.stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .collect(Collectors.toList()))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+ (600000 *31))) //token for a month
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+        logger.log(Level.INFO, " JWT generated");
+
+    // generate JWt based on details
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + expirationTime))
+                .signWith(SignatureAlgorithm.HS256,secretKey)
                 .compact();
 
-        return  JWTtoken;
-
     }
+
+
 }
