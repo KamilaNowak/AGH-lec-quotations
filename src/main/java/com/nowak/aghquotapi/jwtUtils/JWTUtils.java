@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 @Component
 public class JWTUtils {
 
-    Logger logger =Logger.getLogger(JWTUtils.class.getName());
+    Logger logger = Logger.getLogger(JWTUtils.class.getName());
 
     @Value("${jwt.auth.secretKey}")
     private String secretKey;

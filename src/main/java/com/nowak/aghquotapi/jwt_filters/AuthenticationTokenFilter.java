@@ -63,7 +63,6 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
 
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-
             }
         }
         catch (Exception e){

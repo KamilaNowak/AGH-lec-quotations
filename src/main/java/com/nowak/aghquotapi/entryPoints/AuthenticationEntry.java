@@ -19,7 +19,7 @@ public class AuthenticationEntry implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse, AuthenticationException exc)
             throws IOException, ServletException {
-        logger.log(Level.WARNING, " Authentication failed : " + exc.getMessage());
+        logger.log(Level.WARNING, " Authentication failed  "+ exc.getCause());
         httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

@@ -1,11 +1,12 @@
 package com.nowak.aghquotapi.jwt_gens;
 
+import com.nowak.aghquotapi.entities.User;
+import com.nowak.aghquotapi.service.UserDetails;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 
@@ -26,20 +27,19 @@ public class JWTgenerator {
 
     // get User profile
     public String generateJWTtoken(Authentication authentication){
-        org.springframework.security.core.userdetails.User user =
-                (User) authentication.getPrincipal();
+        UserDetails user =
+                (UserDetails) authentication.getPrincipal();
+
 
         logger.log(Level.INFO, " JWT generated");
 
-    // generate JWt based on details
+        // generate JWt based on details
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + expirationTime))
                 .signWith(SignatureAlgorithm.HS256,secretKey)
                 .compact();
 
     }
-
-
 }
+

@@ -4,11 +4,10 @@ import com.nowak.aghquotapi.entities.User;
 import com.nowak.aghquotapi.repo.AuthorityRepo;
 import com.nowak.aghquotapi.repo.UserRepository;
 import com.nowak.aghquotapi.requestBodies.UserDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,29 +18,24 @@ import java.util.Optional;
 @Transactional
 public class UserService implements UserDetailsService {
 
-    private final BCryptPasswordEncoder passwordEncoder;
+   private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AuthorityRepo authorityRepo;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthorityRepo authorityRepo) {
-        this.userRepository = userRepository;
+    public UserService( PasswordEncoder passwordEncoder,UserRepository userRepository, AuthorityRepo authorityRepo) {
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
         this.authorityRepo = authorityRepo;
 
     }
-
     public User findByUsername(String userName){
-        User user = null;
-        try{
-           Optional<User> userOptional= Optional.ofNullable(userRepository.findByName(userName));
-           if(userOptional.isPresent()) {
-               user = userOptional.get();
-           }
+        User user = userRepository.findByName(userName);
+        if(user==null) {
+           return null;
         }
-        catch(Exception e){
-            e.printStackTrace();
+        else{
+            return user;
         }
-        return  user;
     }
 
     public User findByToken(String token){
@@ -70,14 +64,11 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User userToLoad = userRepository.findByName(userName);
         if(userToLoad!=null){
-            System.out.println(userToLoad.getName());
-            return new org.springframework.security.core.userdetails
-                    .User(userToLoad.getName(), userToLoad.getPassword(),
-                    true,true,true,
-                    true,userToLoad.getAuthorities());
+            return  com.nowak.aghquotapi.service.UserDetails.buildUser(userToLoad);
         }
         else {
-            return (UserDetails) new UsernameNotFoundException(HttpStatus.NOT_FOUND.toString());
+            throw new UsernameNotFoundException("User not found");
         }
+
     }
 }

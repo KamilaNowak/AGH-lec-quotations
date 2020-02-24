@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,9 @@ public class QuotationService {
         this.quotationRepo = quotationRepo;
     }
 
+    public List<Quotation> findAll(){
+        return (List<Quotation>) quotationRepo.findAll();
+    }
     Quotation findById(int id) throws NotFoundException {
         Quotation quotation= null;
         Optional<Quotation>  quotationOptional = Optional.ofNullable(quotationRepo.findById(id));
