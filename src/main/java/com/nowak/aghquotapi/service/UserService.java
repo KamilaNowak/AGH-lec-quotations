@@ -2,8 +2,10 @@ package com.nowak.aghquotapi.service;
 
 import com.nowak.aghquotapi.entities.User;
 import com.nowak.aghquotapi.repo.AuthorityRepo;
+import com.nowak.aghquotapi.repo.QuotationRepo;
 import com.nowak.aghquotapi.repo.UserRepository;
 import com.nowak.aghquotapi.requestBodies.UserDto;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,12 +23,14 @@ public class UserService implements UserDetailsService {
    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AuthorityRepo authorityRepo;
+    private final QuotationRepo quotationRepo;
 
-    public UserService( PasswordEncoder passwordEncoder,UserRepository userRepository, AuthorityRepo authorityRepo) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, AuthorityRepo authorityRepo, QuotationRepo quotationRepo) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.authorityRepo = authorityRepo;
 
+        this.quotationRepo = quotationRepo;
     }
     public User findByUsername(String userName){
         User user = userRepository.findByName(userName);
@@ -59,7 +63,9 @@ public class UserService implements UserDetailsService {
         user.setUsersAuthorities(Arrays.asList(authorityRepo.findByAuthority("ROLE_USER")));
         userRepository.save(user);
     }
-
+    public void addToken(String username, String token){
+        quotationRepo.updateToken(username, token);
+    }
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User userToLoad = userRepository.findByName(userName);
