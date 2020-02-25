@@ -50,7 +50,7 @@ URL: https://agh-quots.herokuapp.com/auth/user
 
 ### Fetching data
 #### Fetch JSON Array of quotations
-URL: URL: https://agh-quots.herokuapp.com/quotations
+URL: https://agh-quots.herokuapp.com/quotations
 
 Put your authorization Bearer token in headers 
 ```
@@ -58,7 +58,7 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyIiwiaWF0IjoxNTgyNjU5MjQxfQ.hWSkGxK_Rcegze-Y
 ```
 
 #### Fetch JSON Array of quotations based on faculty
-URL: URL: https://agh-quots.herokuapp.com/quotations?f=<faculty>
+URL: https://agh-quots.herokuapp.com/quotations?f=<faculty>
 
 Put your authorization Bearer token in headers 
 ```
