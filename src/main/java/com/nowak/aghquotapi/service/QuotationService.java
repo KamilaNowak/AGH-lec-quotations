@@ -22,27 +22,20 @@ public class QuotationService {
     public List<Quotation> findAll(){
         return (List<Quotation>) quotationRepo.findAll();
     }
-    Quotation findById(int id) throws NotFoundException {
+
+   public Quotation findById(int id) throws NotFoundException {
         Quotation quotation= null;
         Optional<Quotation>  quotationOptional = Optional.ofNullable(quotationRepo.findById(id));
         if(quotationOptional.isPresent()){
             quotation = quotationOptional.get();
         }
         else{
-            throw new NotFoundException("Quotation not found");
+            throw new NotFoundException("Not found");
         }
         return quotation;
     }
-    Quotation findByFaculty(String faculty) throws NotFoundException {
-        Quotation quotation= null;
-        Optional<Quotation>  quotationOptional = Optional.ofNullable(quotationRepo.findByFaculty(faculty));
-        if(quotationOptional.isPresent()){
-            quotation = quotationOptional.get();
-        }
-        else{
-            throw new NotFoundException("Quotation not found");
-        }
-        return quotation;
-
+    public List<Quotation> findByFaculty(String faculty) throws NotFoundException {
+        List<Quotation>  quotationListByFaculty = quotationRepo.findByFaculty(faculty);
+        return quotationListByFaculty;
     }
 }

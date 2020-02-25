@@ -78,5 +78,15 @@ public class User {
         this.token = token;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", token='" + token + '\'' +
+                ", usersAuthorities=" + usersAuthorities +
+                '}';
+    }
 }
