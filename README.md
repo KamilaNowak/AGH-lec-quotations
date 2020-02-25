@@ -1,6 +1,5 @@
 # AGH-lec-quotations
 
-[![Version](Version)](1.0 BETA)
 
 ## An introduction to API
 >API is provided for every purposes and can be used by anyone
@@ -19,8 +18,8 @@ To access data user is obliged to geneate access token to authorize requests
 URL: https://agh-quots.herokuapp.com/auth/register
 ```javascript
 {
-	"name": "Your Name",
-	"password": "Your password",
+  "name": "Your Name",
+  "password": "Your password",
   "email": "Your email",
 }
 ```
